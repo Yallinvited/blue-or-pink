@@ -24,7 +24,6 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            display: none; /* Ukryj obrazek spod spodu na początku */
         }
         #scratchCanvas {
             position: absolute;
@@ -47,11 +46,12 @@
         const ctx = canvas.getContext('2d');
         const underImage = document.getElementById('underImage');
         const topImageSrc = '19FCC03A-2E7D-456A-86BA-F4D8E2587DBD.PNG';
+        let isDrawing = false;
 
         function resizeCanvas() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
-            drawTopImage(); // Dodane, aby ponownie narysować obrazek na wierzchu po zmianie rozmiaru
+            drawTopImage(); // Rysuj obrazek na wierzchu po zmianie rozmiaru
         }
 
         function drawTopImage() {
@@ -64,64 +64,64 @@
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
                 ctx.globalCompositeOperation = 'destination-out';
-                underImage.style.display = 'block'; // Pokaż obraz spod spodu po załadowaniu obrazka na wierzchu
+                underImage.style.opacity = '1'; // Pokaż obrazek spod spodu po załadowaniu obrazka na wierzchu
             };
         }
 
-        function preloadImages(sources, callback) {
-            let loadedImages = 0;
-            let images = [];
-            sources.forEach((src, index) => {
-                images[index] = new Image();
-                images[index].src = src;
-                images[index].onload = () => {
-                    loadedImages++;
-                    if (loadedImages === sources.length) {
-                        callback();
-                    }
-                };
-            });
-        }
-
-        window.addEventListener('resize', resizeCanvas);
-        window.addEventListener('load', () => {
+        function init() {
             resizeCanvas();
-            preloadImages([underImage.src, topImageSrc], drawTopImage);
-        });
-
-        let isDrawing = false;
-
-        function getMousePos(canvas, evt) {
-            const rect = canvas.getBoundingClientRect();
-            return {
-                x: evt.clientX - rect.left,
-                y: evt.clientY - rect.top
-            };
+            window.addEventListener('resize', resizeCanvas);
+            canvas.addEventListener('mousedown', handleStart);
+            canvas.addEventListener('mousemove', handleMove);
+            canvas.addEventListener('mouseup', handleEnd);
+            canvas.addEventListener('touchstart', handleStart);
+            canvas.addEventListener('touchmove', handleMove);
+            canvas.addEventListener('touchend', handleEnd);
         }
 
-        function getTouchPos(canvas, touch) {
-            const rect = canvas.getBoundingClientRect();
-            return {
-                x: touch.touches[0].clientX - rect.left,
-                y: touch.touches[0].clientY - rect.top
-            };
+        function handleStart(evt) {
+            evt.preventDefault();
+            isDrawing = true;
+            draw(evt);
+        }
+
+        function handleMove(evt) {
+            evt.preventDefault();
+            if (isDrawing) {
+                draw(evt);
+            }
+        }
+
+        function handleEnd() {
+            isDrawing = false;
         }
 
         function draw(evt) {
-            if (!isDrawing) return;
-            evt.preventDefault();
-            let pos = evt.type.includes('touch') ? getTouchPos(canvas, evt) : getMousePos(canvas, evt);
+            let pos = getEventPosition(canvas, evt);
             ctx.beginPath();
             ctx.arc(pos.x, pos.y, 20, 0, 2 * Math.PI);
             ctx.fill();
         }
 
-        canvas.addEventListener('mousedown', (e) => { isDrawing = true; draw(e); });
-        canvas.addEventListener('mousemove', draw);
-        canvas.addEventListener('mouseup', () => { isDrawing = false; });
-        canvas.addEventListener('touchstart', (e) => { isDrawing = true; draw(e); });
-        canvas.addEventListener('touchmove', draw);
-        canvas.addEventListener('touchend', () => { isDrawing = false; });
+        function getEventPosition(canvas, evt) {
+            let rect = canvas.getBoundingClientRect();
+            let clientX, clientY;
+
+            if (evt.type === 'touchstart' || evt.type === 'touchmove') {
+                clientX = evt.touches[0].clientX;
+                clientY = evt.touches[0].clientY;
+            } else {
+                clientX = evt.clientX;
+                clientY = evt.clientY;
+            }
+
+            return {
+                x: clientX - rect.left,
+                y: clientY - rect.top
+            };
+        }
+
+        window.onload = init;
     </script>
 </body>
 </html>
