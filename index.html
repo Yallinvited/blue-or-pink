@@ -24,7 +24,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            opacity: 1; /* Pokaż obrazek spod spodu od razu */
+            opacity: 0; /* Ukryj obrazek na początku */
             transition: opacity 0.3s ease; /* Dodany efekt przejścia */
         }
         #scratchCanvas {
@@ -66,7 +66,7 @@
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
                 ctx.globalCompositeOperation = 'destination-out';
-                underImage.style.opacity = '0'; // Ukryj obrazek spod spodu
+                underImage.style.opacity = '1'; // Pokaż obrazek spod spodu po załadowaniu obrazka na wierzchu
                 underImage.style.transition = 'opacity 0.3s ease'; // Dodany efekt przejścia
             };
         }
