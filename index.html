@@ -51,6 +51,7 @@
         function resizeCanvas() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
+            drawTopImage(); // Dodane, aby ponownie narysować obrazek na wierzchu po zmianie rozmiaru
         }
 
         function drawTopImage() {
