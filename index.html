@@ -38,7 +38,7 @@
 </head>
 <body>
     <div id="container">
-        <img id="underImage" src="IMG_2817.JPG" alt="Zdjęcie pod spodem">
+        <img id="underImage" src="test1.jpg" alt="Zdjęcie pod spodem">
         <canvas id="scratchCanvas"></canvas>
     </div>
     <script>
@@ -50,7 +50,7 @@
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
             const img = new Image();
-            img.src = '19FCC03A-2E7D-456A-86BA-F4D8E2587DBD.PNG';
+            img.src = 'test2.jpg';
             img.onload = function() {
                 let scale = Math.max(canvas.width / img.width, canvas.height / img.height);
                 let x = (canvas.width / 2) - (img.width / 2) * scale;
