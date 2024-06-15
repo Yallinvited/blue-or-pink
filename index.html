@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zdrapka na telefon</title>
+    <title>scratch card</title>
     <style>
         body, html {
             margin: 0;
@@ -40,14 +40,14 @@
 </head>
 <body>
     <div id="container">
-        <img id="underImage" src="IMG_2817.JPG" alt="Zdjęcie pod spodem">
+        <img id="underImage" src="test1.jpg" alt="Zdjęcie pod spodem">
         <canvas id="scratchCanvas"></canvas>
     </div>
     <script>
         const canvas = document.getElementById('scratchCanvas');
         const ctx = canvas.getContext('2d');
         const underImage = document.getElementById('underImage');
-        const topImageSrc = '19FCC03A-2E7D-456A-86BA-F4D8E2587DBD.PNG';
+        const topImageSrc = 'test2.jpg';
         let isDrawing = false;
 
         function resizeCanvas() {
