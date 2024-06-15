@@ -33,16 +33,7 @@
             width: 100%;
             height: 100%;
             touch-action: none;
-            z-index: 1;
-        }
-        #topImage {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            z-index: 2; /* Ustaw obrazek na wierzchu */
+            z-index: 2;
         }
     </style>
 </head>
@@ -50,14 +41,12 @@
     <div id="container">
         <img id="underImage" src="IMG_2817.JPG" alt="Zdjęcie pod spodem">
         <canvas id="scratchCanvas"></canvas>
-        <img id="topImage" src="19FCC03A-2E7D-456A-86BA-F4D8E2587DBD.PNG" alt="Zdrapka">
     </div>
     <script>
         const canvas = document.getElementById('scratchCanvas');
         const ctx = canvas.getContext('2d');
         const container = document.getElementById('container');
         const underImage = document.getElementById('underImage');
-        const topImage = document.getElementById('topImage');
 
         function resizeCanvas() {
             canvas.width = window.innerWidth;
@@ -66,6 +55,16 @@
 
         function showContainer() {
             container.style.visibility = 'visible';
+            const img = new Image();
+            img.src = '19FCC03A-2E7D-456A-86BA-F4D8E2587DBD.PNG';
+            img.onload = function() {
+                let scale = Math.max(canvas.width / img.width, canvas.height / img.height);
+                let x = (canvas.width / 2) - (img.width / 2) * scale;
+                let y = (canvas.height / 2) - (img.height / 2) * scale;
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
+                ctx.globalCompositeOperation = 'destination-out';
+            };
         }
 
         function preloadImages(sources, callback) {
@@ -86,19 +85,7 @@
         window.addEventListener('resize', resizeCanvas);
         window.addEventListener('load', () => {
             resizeCanvas();
-            preloadImages([underImage.src, topImage.src], () => {
-                showContainer();
-                const img = new Image();
-                img.src = topImage.src;
-                img.onload = function() {
-                    let scale = Math.max(canvas.width / img.width, canvas.height / img.height);
-                    let x = (canvas.width / 2) - (img.width / 2) * scale;
-                    let y = (canvas.height / 2) - (img.height / 2) * scale;
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
-                    ctx.globalCompositeOperation = 'destination-out';
-                };
-            });
+            preloadImages([underImage.src, '19FCC03A-2E7D-456A-86BA-F4D8E2587DBD.PNG'], showContainer);
         });
 
         let isDrawing = false;
